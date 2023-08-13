@@ -5,7 +5,7 @@ package main
  * Create an archive
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230516
+ * Last Modified 20230813
  */
 
 import (
@@ -95,6 +95,11 @@ func addToArchive(
 		}
 		/* Only care about regular files. */
 		if !d.Type().IsRegular() {
+			return nil
+		}
+
+		/* Skip files we don't want. */
+		if nil != excludeRE && excludeRE.MatchString(path) {
 			return nil
 		}
 

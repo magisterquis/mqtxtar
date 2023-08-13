@@ -6,7 +6,7 @@ package main
  * mqtxtar: Tar-like txtar utility
  * By J. Stuart McMurray
  * Created 20230516
- * last Modified 20230516
+ * Last Modified 20230813
  */
 
 import (
@@ -16,6 +16,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync/atomic"
 )
@@ -42,6 +43,9 @@ var (
 	/* Files is the list of paths on which to operate.  It's the union
 	of flag.Args() and anything in the file given with -I. */
 	Files = make([]string, 0)
+
+	/* excludeRE indicates which files to not add or extract. */
+	excludeRE *regexp.Regexp
 )
 
 // StdioFileName indicates we use stdin/out instead of a regular file.
@@ -85,6 +89,11 @@ func main() {
 			"",
 			"Optional `file` containing names of files to "+
 				"add or extract",
+		)
+		exclude = flag.String(
+			"exclude",
+			"",
+			"Do not add or extract files matching the `regex`",
 		)
 	)
 	flag.BoolVar(
@@ -134,6 +143,18 @@ Options:
 	}
 	log.SetFlags(0)
 	log.SetPrefix(filepath.Base(os.Args[0]) + ": ")
+
+	/* If we're regexing, compile the regexen. */
+	if "" != *exclude {
+		var err error
+		if excludeRE, err = regexp.Compile(*exclude); nil != err {
+			log.Fatalf(
+				"Error compiling exclude regex %q: %s",
+				*exclude,
+				err,
+			)
+		}
+	}
 
 	/* Make sure we have exactly one action. */
 	var nDo int
