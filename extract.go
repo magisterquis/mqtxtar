@@ -5,10 +5,12 @@ package main
  * Extract or list an archive
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230516
+ * Last Modified 20230813
  */
 
 import (
+	"bytes"
+	"compress/gzip"
 	"fmt"
 	"io"
 	"log"
@@ -90,13 +92,32 @@ func Extract(onlyList bool) error {
 	return nil
 }
 
-// getArchive gets the archive as a []byte.  If it's a file, the archive is
-// mapped into memory.  Stdin is slurped.
+// getArchive gets the archive as a []byte.  If it's an uncompressed file, the
+// archive is mapped into memory.  Stdin is slurped.
 func getArchive() ([]byte, error) {
 	/* Stdin is easy, if a bit more memory-intensive. */
 	if StdioFileName == ArchiveFile {
-		return io.ReadAll(os.Stdin)
+		/* Work out how to read this thing. */
+		r := io.Reader(os.Stdin)
+		if compression {
+			zr, err := gzip.NewReader(r)
+			if nil != err {
+				return nil, fmt.Errorf(
+					"initializing gunzipper: %w",
+					err,
+				)
+			}
+			r = zr
+			defer zr.Close()
+		}
+		/* Slurp stdin. */
+		b, err := io.ReadAll(r)
+		if nil != err {
+			return nil, fmt.Errorf("slurping stdin: %w", err)
+		}
+		return b, nil
 	}
+
 	/* Map the archive into memory. */
 	f, err := os.Open(ArchiveFile)
 	if nil != err {
@@ -123,6 +144,21 @@ func getArchive() ([]byte, error) {
 	)
 	if nil != err {
 		return nil, fmt.Errorf("mapping into memory: %s", err)
+	}
+
+	/* If we're decompressing, we'll be able to close the map right
+	away. */
+	if compression {
+		defer unix.Munmap(mb)
+		zr, err := gzip.NewReader(bytes.NewReader(mb))
+		if nil != err {
+			return nil, fmt.Errorf("initializing unzipper: %w", err)
+		}
+		d, err := io.ReadAll(zr)
+		if nil != err {
+			return nil, fmt.Errorf("gunzipping: %w", err)
+		}
+		return d, nil
 	}
 	return mb, nil
 }

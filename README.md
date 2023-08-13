@@ -8,7 +8,7 @@ Features
 - Create, Extract, and List the contents of txtar archives
 - Works with files or Standard Input/Output
 - Files to be extracted or listed are mmap'd, saving potential _kilobytes_ of
-  memory
+  memory (but only without `-z`)
 - Tar-like flags, but with just enough differece (`-cv` -> `-c -v`) to prevent
   mistakes due to overreliance on muscle memory
 
@@ -56,4 +56,5 @@ Options:
   -t	List archive contents
   -v	Enable verbose output
   -x	Extract archive contents
+  -z	Compress archive using gzip
 ```

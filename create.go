@@ -5,13 +5,15 @@ package main
  * Create an archive
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230516
+ * Last Modified 20230813
  */
 
 import (
 	"bufio"
+	"compress/gzip"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"log"
 	"os"
@@ -53,9 +55,17 @@ func Create(comment string) error {
 		}
 		defer of.Close()
 	}
+	w := io.Writer(of)
+
+	/* Optionally add a layer of compression. */
+	if compression {
+		zw := gzip.NewWriter(of)
+		defer zw.Close()
+		w = zw
+	}
 
 	/* Emit the archive itself. */
-	if _, err := of.Write(txtar.Format(&archive)); nil != err {
+	if _, err := w.Write(txtar.Format(&archive)); nil != err {
 		return fmt.Errorf("writing archive: %w", err)
 	}
 

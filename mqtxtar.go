@@ -6,7 +6,7 @@ package main
  * mqtxtar: Tar-like txtar utility
  * By J. Stuart McMurray
  * Created 20230516
- * last Modified 20230516
+ * Last Modified 20230813
  */
 
 import (
@@ -42,6 +42,9 @@ var (
 	/* Files is the list of paths on which to operate.  It's the union
 	of flag.Args() and anything in the file given with -I. */
 	Files = make([]string, 0)
+
+	/* compress enables gzip (de)compression. */
+	compression bool
 )
 
 // StdioFileName indicates we use stdin/out instead of a regular file.
@@ -105,6 +108,12 @@ func main() {
 		"e",
 		StopOnError,
 		"Stop after the first error",
+	)
+	flag.BoolVar(
+		&compression,
+		"z",
+		compression,
+		"Compress archive using gzip",
 	)
 	flag.Usage = func() {
 		fmt.Fprintf(
