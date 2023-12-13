@@ -5,7 +5,7 @@ package main
  * Create an archive
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230813
+ * Last Modified 20231213
  */
 
 import (
@@ -99,7 +99,7 @@ func addToArchive(
 		}
 
 		/* Skip files we don't want. */
-		if nil != excludeRE && excludeRE.MatchString(path) {
+		if Excluded(path) {
 			return nil
 		}
 

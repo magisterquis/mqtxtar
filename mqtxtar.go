@@ -6,7 +6,7 @@ package main
  * mqtxtar: Tar-like txtar utility
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230813
+ * Last Modified 20231213
  */
 
 import (
@@ -45,7 +45,7 @@ var (
 	Files = make([]string, 0)
 
 	/* excludeRE indicates which files to not add or extract. */
-	excludeRE *regexp.Regexp
+	excludeREs []*regexp.Regexp
 )
 
 // StdioFileName indicates we use stdin/out instead of a regular file.
@@ -90,11 +90,19 @@ func main() {
 			"Optional `file` containing names of files to "+
 				"add or extract",
 		)
-		exclude = flag.String(
-			"exclude",
-			"",
-			"Do not add or extract files matching the `regex`",
-		)
+	)
+	flag.Func(
+		"exclude",
+		"Do not add or extract files matching the `regex` "+
+			"(may be repeated)",
+		func(s string) error {
+			re, err := regexp.Compile(s)
+			if nil != err {
+				return err
+			}
+			excludeREs = append(excludeREs, re)
+			return nil
+		},
 	)
 	flag.BoolVar(
 		&Unsafe,
@@ -143,18 +151,6 @@ Options:
 	}
 	log.SetFlags(0)
 	log.SetPrefix(filepath.Base(os.Args[0]) + ": ")
-
-	/* If we're regexing, compile the regexen. */
-	if "" != *exclude {
-		var err error
-		if excludeRE, err = regexp.Compile(*exclude); nil != err {
-			log.Fatalf(
-				"Error compiling exclude regex %q: %s",
-				*exclude,
-				err,
-			)
-		}
-	}
 
 	/* Make sure we have exactly one action. */
 	var nDo int
@@ -271,4 +267,15 @@ func mustGetFiles(listFile string) {
 	for _, p := range flag.Args() {
 		add(p)
 	}
+}
+
+// Excluded returns true if s matches any of the regexes supplied with the
+// -exclude flag.
+func Excluded(s string) bool {
+	for _, re := range excludeREs {
+		if re.MatchString(s) {
+			return true
+		}
+	}
+	return false
 }

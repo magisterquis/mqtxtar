@@ -5,7 +5,7 @@ package main
  * Extract or list an archive
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230813
+ * Last Modified 20231213
  */
 
 import (
@@ -66,9 +66,10 @@ func Extract(onlyList bool) error {
 			rFiles[string(file.Name)] = true
 		}
 		/* Skip files we don't want. */
-		if nil != excludeRE && excludeRE.MatchString(file.Name) {
-			continue
+		if Excluded(file.Name) {
+			return nil
 		}
+
 		/* Handle this file. */
 		if onlyList {
 			listFile(file)
