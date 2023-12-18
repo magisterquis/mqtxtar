@@ -19,6 +19,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"golang.org/x/tools/txtar"
 )
@@ -60,6 +61,7 @@ func Create(comment string) error {
 	/* Optionally add a layer of compression. */
 	if compression {
 		zw := gzip.NewWriter(of)
+		zw.ModTime = time.Now()
 		defer zw.Close()
 		w = zw
 	}
