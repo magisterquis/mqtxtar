@@ -6,7 +6,7 @@ package main
  * mqtxtar: Tar-like txtar utility
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20230813
+ * Last Modified 20231218
  */
 
 import (
@@ -16,6 +16,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync/atomic"
 )
@@ -45,6 +46,9 @@ var (
 
 	/* compress enables gzip (de)compression. */
 	compression bool
+
+	/* excludeRE indicates which files to not add or extract. */
+	excludeREs []*regexp.Regexp
 )
 
 // StdioFileName indicates we use stdin/out instead of a regular file.
@@ -89,6 +93,19 @@ func main() {
 			"Optional `file` containing names of files to "+
 				"add or extract",
 		)
+	)
+	flag.Func(
+		"exclude",
+		"Do not add or extract files matching the `regex` "+
+			"(may be repeated)",
+		func(s string) error {
+			re, err := regexp.Compile(s)
+			if nil != err {
+				return err
+			}
+			excludeREs = append(excludeREs, re)
+			return nil
+		},
 	)
 	flag.BoolVar(
 		&Unsafe,
@@ -259,4 +276,15 @@ func mustGetFiles(listFile string) {
 	for _, p := range flag.Args() {
 		add(p)
 	}
+}
+
+// Excluded returns true if s matches any of the regexes supplied with the
+// -exclude flag.
+func Excluded(s string) bool {
+	for _, re := range excludeREs {
+		if re.MatchString(s) {
+			return true
+		}
+	}
+	return false
 }

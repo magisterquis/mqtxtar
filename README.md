@@ -51,6 +51,8 @@ Options:
   -comment comment
     	Set archive comment, with -c
   -e	Stop after the first error
+  -exclude regex
+    	Do not add or extract files matching the regex (may be repeated)
   -f file
     	Name of archive file or - for stdin/out (default "-")
   -t	List archive contents
