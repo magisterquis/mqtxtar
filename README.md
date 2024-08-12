@@ -1,3 +1,17 @@
+Warning
+=======
+```
+ __________________________________
+/ !!!   Rewrite in progress.   !!! \
+\ !!! Expect breaking changes. !!! /
+ ----------------------------------
+        \   ^__^
+         \  (!!)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+```
+
 MagisterQuis' Text Archiver
 ===========================
 [Tar](https://man.openbsd.org/tar)-like utility for operating on
