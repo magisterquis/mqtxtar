@@ -6,13 +6,14 @@ package main
  * mqtxtar: Tar-like txtar utility
  * By J. Stuart McMurray
  * Created 20230516
- * Last Modified 20231213
+ * Last Modified 20240812
  */
 
 import (
 	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -51,7 +52,19 @@ var (
 // StdioFileName indicates we use stdin/out instead of a regular file.
 const StdioFileName = "-"
 
+const warning = ` __________________________________
+/ !!!   Rewrite in progress.   !!! \
+\ !!! Expect breaking changes. !!! /
+ ----------------------------------
+        \   ^__^
+         \  (!!)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+`
+
 func main() {
+	io.WriteString(os.Stderr, warning)
 	/* Command-line flags. */
 	var (
 		verbOn = flag.Bool(
