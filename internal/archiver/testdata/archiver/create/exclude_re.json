@@ -1,0 +1,17 @@
+{
+        "Comment": "",
+        "Filename": "",
+        "WithGzip": false,
+        "Paths": [
+                "single_file",
+                "one_level_dir",
+                "two_levels_dir"
+        ],
+        "UnsafePaths": false,
+        "Verbose": false,
+        "ExcludeGlobs": null,
+        "ExcludeREs": [
+                "file_b$",
+                ".*old_[^/]+$"
+        ]
+}

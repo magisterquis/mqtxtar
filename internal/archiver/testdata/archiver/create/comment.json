@@ -1,0 +1,10 @@
+{
+	"Comment": "This is a comment",
+	"Filename": "",
+	"WithGzip": false,
+	"Paths": [
+		"single_file"
+	],
+	"UnsafePaths": false,
+	"Verbose": false
+}

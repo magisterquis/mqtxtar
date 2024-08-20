@@ -1,0 +1,15 @@
+This is a comment
+-- a --
+This is file a
+-- b/b.c --
+This is file b/b.c
+-- b/b.go --
+This is file b.go
+-- b/c.c --
+This is file b/c.c
+-- c/a.c --
+This is file c/a.c
+-- c/a.fs --
+This is file c/a.fs
+-- c/b.c --
+This is file c/b.c

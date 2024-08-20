@@ -1,0 +1,12 @@
+{
+	"Comment": "",
+	"Filename": "",
+	"WithGzip": false,
+	"Paths": [],
+	"UnsafePaths": false,
+	"Verbose": false,
+        "ExcludeGlobs": [
+                "*/*.c",
+                "b/*"
+        ]
+}

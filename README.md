@@ -1,17 +1,3 @@
-Warning
-=======
-```
- __________________________________
-/ !!!   Rewrite in progress.   !!! \
-\ !!! Expect breaking changes. !!! /
- ----------------------------------
-        \   ^__^
-         \  (!!)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
-```
-
 MagisterQuis' Text Archiver
 ===========================
 [Tar](https://man.openbsd.org/tar)-like utility for operating on
@@ -21,56 +7,68 @@ Features
 --------
 - Create, Extract, and List the contents of txtar archives
 - Works with files or Standard Input/Output
-- Files to be extracted or listed are mmap'd, saving potential _kilobytes_ of
-  memory (but only without `-z`)
 - Tar-like flags, but with just enough differece (`-cv` -> `-c -v`) to prevent
   mistakes due to overreliance on muscle memory
+- Gzip compression and de-compression
+- Exclude files based on globs or regex
 
 Quickstart
 ----------
-```sh
-go install github.com/magisterquis/mqtxtar@latest
-mqtxtar -h
-
-# Create an archive
-mqtxtar -c -f src.txtar -comment "WIP Sources" *.go go.mod go.sum
-
-# List an archive's contents
-mqtxtar -t -f src.txtar
-
-# Extract an archive
-mqtxtar -x -f src.txtar
-```
+1. Have [Go installed](https://go.dev/doc/install).
+2. Install the program itself.
+   ```sh
+   go install github.com/magisterquis/mqtxtar@dev
+   ```
+3. Create an archive.
+   ```sh
+   $ mqtxtar -c -f code.txtar *.go internal/*/*.go
+   ```
+4. List the contents of an archive.
+   ```sh
+   $ mqtxtar -t -f code.txtar
+   mqtxtar.go
+   internal/archiver/archiver.go
+   internal/archiver/archiver_test.go
+   internal/archiver/create.go
+   internal/archiver/create_test.go
+   internal/archiver/listextract.go
+   internal/archiver/listextract_test.go
+   ```
+5. Extract an archive.
+   ```sh
+   $ mqtxtar -x -f code.txtar
+   ```  
 
 Usage
 -----
 ```
-Usage: ./mqtxtar -c|-x|-t [options] [files...]
+Usage: mqtxtar -c|-t|-x [options] [paths...]
 
 Tar-like txtar utility.  Creates, extracts, and lists the contents of archives
 in txtar format.  For more details on txtar archives, please see
 
 https://pkg.go.dev/golang.org/x/tools/txtar
 
-Files to be added or extracted can be given as arguments or in a file specified
-with -I or both.
+Paths to be added or extracted can be given as arguments or in a file specified
+with -I or both.  All paths within an archive use forward (Unix) slashes.
 
 Options:
   -C directory
-    	Relative directory for files for -c or -x
+    	Set the working directory before doing anything else
   -I file
-    	Optional file containing names of files to add or extract
-  -P	Do not sanitize filenames before extraction
+    	Optional file containing names of paths to add or extract, one per line
+  -P	Do not strip leading slashes from pathnames
   -c	Create an archive
   -comment comment
-    	Set archive comment, with -c
-  -e	Stop after the first error
-  -exclude regex
+    	Set archive comment, with -c and
+  -exclude glob
+    	Do not add or extract files matching theglob (may be repeated)
+  -exclude-re regex
     	Do not add or extract files matching the regex (may be repeated)
   -f file
-    	Name of archive file or - for stdin/out (default "-")
+    	Optional archive file to use instead of standard input/output
   -t	List archive contents
   -v	Enable verbose output
   -x	Extract archive contents
-  -z	Compress archive using gzip
+  -z	(De)compress archive using gzip
 ```
