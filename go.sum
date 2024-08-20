@@ -1,4 +1,2 @@
-github.com/magisterquis/mqd v0.0.0-20231211002502-c85fffcb3c66 h1:Y53FfO90nSvDHA67eOupCIlLq84k162SOto7q/1yBLY=
-github.com/magisterquis/mqd v0.0.0-20231211002502-c85fffcb3c66/go.mod h1:jKQAN9JXydGiqijYQyOCpTj+dqCxZidzftydnPw6fw4=
 golang.org/x/tools v0.24.0 h1:J1shsA93PJUEVaUSaay7UXAyE8aimq3GW0pjlolpa24=
 golang.org/x/tools v0.24.0/go.mod h1:YhNqVBIfWHdzvTLs0d8LCuMhkKUgSUKldakyV7W/WDQ=
