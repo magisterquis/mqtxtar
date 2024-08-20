@@ -3,7 +3,8 @@ Warning
 ```
  __________________________________
 / !!!   Rewrite in progress.   !!! \
-\ !!! Expect breaking changes. !!! /
+| !!! Expect breaking changes. !!! |
+\ New version is on the dev branch /
  ----------------------------------
         \   ^__^
          \  (!!)\_______
@@ -11,6 +12,8 @@ Warning
                 ||----w |
                 ||     ||
 ```
+Grab the latest code from the
+[dev branch](https://github.com/magisterquis/mqtxtar/tree/dev).
 
 MagisterQuis' Text Archiver
 ===========================
