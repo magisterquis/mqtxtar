@@ -17,7 +17,7 @@ Quickstart
 1. Have [Go installed](https://go.dev/doc/install).
 2. Install the program itself.
    ```sh
-   go install github.com/magisterquis/mqtxtar@dev
+   go install github.com/magisterquis/mqtxtar@latest
    ```
 3. Create an archive.
    ```sh
